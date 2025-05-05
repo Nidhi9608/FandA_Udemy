@@ -153,13 +153,43 @@ SELECT title
 FROM courses
 WHERE is_paid = 'True' AND discount_price_amount = 0;
 
---   12. Price vs. Subscribers correlation prepare
+--   12. Price vs. Subscribers correlation 
+SELECT price_detail_amount, num_subscribers
+FROM courses;
 
 -- F. Ratings and Reviews
 --   13. Top rated courses
+SELECT title, avg_rating, num_reviews
+FROM courses
+WHERE num_reviews > 1000
+ORDER BY avg_rating DESC
+LIMIT 10;
+
 --   14. Courses with High Ratings but Low Overall
+SELECT title, avg_rating, avg_rating_recent
+FROM courses
+WHERE avg_rating_recent > avg_rating
+ORDER BY (avg_rating_recent - avg_rating) DESC
+LIMIT 10;
+
 -- G. Time-based Insights
 --   15. Courses published per year
+SELECT YEAR(published_time) AS year, COUNT(*) AS course_count
+FROM courses
+GROUP BY YEAR(published_time)
+ORDER BY year;
+
 --   16. Average Discounted Price Over Time
+SELECT YEAR(published_time) AS year, 
+       AVG(discount_price_amount) AS avg_discount_price
+FROM courses
+WHERE is_paid = 'True'
+GROUP BY YEAR(published_time)
+ORDER BY year;
+
 --   17. Recently published Top performers
+SELECT title, published_time, avg_rating_recent
+FROM courses
+ORDER BY published_time DESC
+LIMIT 10;
 
