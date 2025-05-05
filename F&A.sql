@@ -6,14 +6,13 @@
 -- This project is designed to demonstrate my SQL skills
 -- The project involves setting up database.
 
--- Objectives:
-
 -- Project Structure
 -- 1. Database Setup
 -- Database Creation:
 -- Table Creation: A table named 'courses' is created to store Udemy,s Financial and Accounting courses data.
 -- The table structure includes columns for id, title, url, is_paid, num_subscribers, avg_rating, avg_rating_recent, rating, num_reviews, is_wishlisted, num_published_lectures, num_published_practice_tests, created, published_time, discount_price_amount, discount_price_currency, discount_price_price_string, price_detail_amount, price_detail_currency, price_detail_price_string.
 
+-- Project Objective
 -- A. Ovrall KPTs
 --   1. Key Performing Indexes
 -- B. Course Performance
@@ -78,23 +77,84 @@ SELECT * FROM courses;
 
 -- A. Ovrall KPTs
 --   1. Key Performing Indexes
+-- Total number of courses
+SELECT COUNT(*) AS total_courses FROM courses;
 
+-- Total subscribers
+SELECT SUM(num_subscribers) AS total_subscribers FROM courses;
+
+-- Total reviews
+SELECT SUM(num_reviews) AS total_reviews FROM courses;
+
+-- Average rating
+SELECT AVG(avg_rating) AS avg_rating FROM courses;
 
 -- B. Course Performance
 --   2. Top 10 most subscribed courses
+SELECT title, num_subscribers
+FROM courses
+ORDER BY num_subscribers DESC
+LIMIT 10;
+
 --   3. Total revenue estimate(if price is fixed)
---   4. Average reviews per level
+SELECT SUM(price * num_subscribers) AS estimated_revenue
+FROM courses;
+
+--   4. Average reviews per rating
+SELECT avg_rating, AVG(num_reviews) AS avg_reviews
+FROM courses
+GROUP BY avg_rating;
+
 -- C. Subject-wise Trends
 --   5. Subject-wise subscribers
+SELECT DISTINCT(id) as d_id, title, num_subscribers
+FROM courses
+GROUP BY d_id;
+
 -- D. Popularity and User Engagement
 --   6. Most reviewed courses
+SELECT title, num_reviews
+FROM courses
+ORDER BY num_reviews DESC
+LIMIT 10;
+
 --   7. Most wishlisted courses
+SELECT title, is_wishlisted
+FROM courses
+WHERE is_wishlisted = 'true'
+ORDER BY num_subscribers DESC
+LIMIT 10;
+
 --   8. Most subscribed paid courses
+SELECT title, num_subscribers
+FROM courses
+WHERE is_paid = 'True'
+ORDER BY num_subscribers DESC
+LIMIT 10;
+
 -- E. Pricing and Revenue Insights
 --   9. Top 10 most expensive courses(Actual Price)
+SELECT title, price_detail_amount
+FROM courses
+WHERE is_paid = 'True'
+ORDER BY price_detail_amount DESC
+LIMIT 10;
+
 --   10. Price Discount Analysis
+SELECT title, price_detail_amount, discount_price_amount,
+       (price_detail_amount - discount_price_amount) AS discount_value
+FROM courses
+WHERE is_paid = 'True'
+ORDER BY discount_value DESC
+LIMIT 10;
+
 --   11. Courses with 100% discount
+SELECT title
+FROM courses
+WHERE is_paid = 'True' AND discount_price_amount = 0;
+
 --   12. Price vs. Subscribers correlation prepare
+
 -- F. Ratings and Reviews
 --   13. Top rated courses
 --   14. Courses with High Ratings but Low Overall
