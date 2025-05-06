@@ -1,4 +1,4 @@
--- Financial and Accounting Courses-Udemy Project
+# Financial and Accounting Courses-Udemy Project
 -- Project Overview
 -- Project Title: Financial and Accounting Courses-Udemy
 -- Database: f&a_udemy
